@@ -12,6 +12,7 @@ class eCurve{
         point add(point,point);
         point multiply(point,int);
         bool isOn(point);
+        point getPoint(double,bool);
 };
 eCurve::eCurve(int aParam,int bParam){
     a=aParam;
@@ -56,4 +57,9 @@ point eCurve::multiply(point p, int factor){
         pEnd=add(pEnd,p);
     }
     return pEnd;
+}
+point eCurve::getPoint(double x,bool isPositive){
+    double y=sqrt(pow(x,3)+a*x+b);
+    if(isPositive) return {x:x,y:y};
+    return {x:x,y:-y};
 }
