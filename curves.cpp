@@ -42,11 +42,12 @@ point eCurve::multiply(point p, int factor){
     if(factor==1) return p;
     if(factor==0) return {x:NULL,y:NULL};
     point pEnd;
-    const double slope=1/2*(3*pow(p.x,2)-2)/(sqrt(pow(p.x,3)-2*p.x+2));
+    double t=pow(p.x,2);
+    const double slope=0.5*(3*pow(p.x,2)-2)/(sqrt(pow(p.x,3)-2*p.x+2));
     const double mTan=p.y>0?slope:-slope;
     const double bTan=p.y-mTan*p.x;
     double polyn[4]={1,-pow(mTan,2),a-2*mTan*bTan,b-pow(bTan,2)};
-    const double zeros[3]={getZeros(polyn)[0],getZeros(polyn)[1],getZeros(polyn)[2]};
+    const double zeros[3]={*(getZeros(polyn)+0),*(getZeros(polyn)+1),*(getZeros(polyn)+2)};
     for(int i=0;i<3;i++){
         if(zeros[i]!=NULL&&zeros[i]!=p.x){
             pEnd.x=zeros[i];
@@ -62,4 +63,10 @@ point eCurve::getPoint(double x,bool isPositive){
     double y=sqrt(pow(x,3)+a*x+b);
     if(isPositive) return {x:x,y:y};
     return {x:x,y:-y};
+}
+int main(){
+    eCurve curve(-2,2);
+    point p=curve.getPoint(0.75,true);
+    point q=curve.multiply(p,2);
+    point h={x:1,y:2};
 }
