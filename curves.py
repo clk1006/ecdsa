@@ -9,10 +9,12 @@ class eCurve:
         self.a=a
         self.b=b
         self.order=order
+    def isIdentity(self,p):
+        return p.x==0 and p.y==0
     def getPoint(self,x,isBigger):
-        res=(x**2+self.a*x+self.b)%self.order
+        res=(x**3+self.a*x+self.b)%self.order
         y=-1
-        for i in range((self.order-1)/2):
+        for i in range(int((self.order+1)/2)):
             if (i**2)%self.order==res:
                 y=i
                 break
@@ -24,23 +26,30 @@ class eCurve:
     def check(self,p):
         return p.y**2==p.x**3+self.a*p.x+self.b
     def add(self,p,q):
-        pass
+        if self.isIdentity(p):
+            return q
+        if self.isIdentity(q):
+            return p
+        if p.x==q.x and p.y==self.order-q.y:
+            return point(0,0)
+        lam=0
+        if p.x==q.x and p.y==q.y:
+            lam=(3*p.x**2+self.a)/(2*p.y)
+        else:
+            lam=(p.y-q.y)/(p.x-q.x)
+        x=-p.x-q.x+lam**2
+        if x!=int(x):
+            return point(0,0)
+        y=-p.y+lam*(p.x-x)
+        return point(x%self.order,y%self.order)
     def multiply(self,p,factor):
         if factor==0:
-            return NoReturn
+            return point(0,0)
         if factor==1:
             return p
-        if factor==2:
-            return self.getDouble(p)
         return self.add(self.multiply(p,factor-1),p)
-    def getDouble(self,p):
-        q=point(0,0)
-        for i in range(self.order):
-            if i!=p.x and self.getPoint(i,False)!=NoReturn:
-                q=self.getPoint(i,False)
-        p2=self.add(p,q)
-        p3=self.add(p,p2)
-        p3.y=self.order-p3.y
-        p4=self.add(p3,q)
-        p4.y=self.order-p4.y
-        return p4
+curve=eCurve(-3,5,19)
+p=curve.getPoint(0,False)
+q=curve.getPoint(5,True)
+r=curve.multiply(p,2)
+print("Hi")
