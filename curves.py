@@ -4,6 +4,10 @@ class point:
     def __init__(self,x,y):
         self.x=x
         self.y=y
+    def __ne__(self,other):
+        return self.x!=other.x or self.y!=other.y
+    def __eq__(self,other):
+        return self.x==other.x and self.y==other.y
 class eCurve:
     def __init__(self,a,b,order):
         self.a=a
@@ -23,12 +27,10 @@ class eCurve:
         if isBigger:
             return point(x,self.order-y)
         return point(x,y)
-    def check(self,p):
-        return p.y**2==p.x**3+self.a*p.x+self.b
     def add(self,p,q):
-        if self.isIdentity(p):
+        if p==point(0,0):
             return q
-        if self.isIdentity(q):
+        if q==point(0,0):
             return p
         if p.x==q.x and p.y==self.order-q.y:
             return point(0,0)
@@ -48,8 +50,3 @@ class eCurve:
         if factor==1:
             return p
         return self.add(self.multiply(p,factor-1),p)
-curve=eCurve(-3,5,19)
-p=curve.getPoint(0,False)
-q=curve.getPoint(5,True)
-r=curve.multiply(p,2)
-print("Hi")
