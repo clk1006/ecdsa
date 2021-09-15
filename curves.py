@@ -8,6 +8,8 @@ class point:
         return self.x!=other.x or self.y!=other.y
     def __eq__(self,other):
         return self.x==other.x and self.y==other.y
+    def __str__(self):
+        return "("+str(self.x)+"|"+str(self.y)+")"
 class eCurve:
     def __init__(self,a,b,order):
         self.a=a
@@ -50,3 +52,8 @@ class eCurve:
         if factor==1:
             return p
         return self.add(self.multiply(p,factor-1),p)
+    def getN(self,p):
+        n=2
+        while(self.multiply(p,n)!=point(0,0)):
+            n+=1
+        return n
