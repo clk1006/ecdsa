@@ -1,5 +1,4 @@
 from math import *
-from typing import NoReturn
 from random import randint
 class point:
     def __init__(self,x,y):
@@ -40,7 +39,7 @@ class eCurve:
                 y=i
                 break
         if y==-1:
-            return NoReturn
+            return PNULL
         if isBigger:
             return point(x,self.order-y)
         return point(x,y)
@@ -55,7 +54,7 @@ class eCurve:
             return p
         if p==q:
             for i in range(self.order):
-                if isinstance(self.getPoint(i,False),point):
+                if self.getPoint(i,False)!=PNULL:
                     q=self.getPoint(i,False)
             return self.mirror(self.add(q,self.mirror(self.add(p,self.add(p,q)))))
         step=q-p
